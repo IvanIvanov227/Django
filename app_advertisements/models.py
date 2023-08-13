@@ -2,11 +2,6 @@ from django.db import models
 
 
 class Advertisement(models.Model):
-    class Meta:
-        db_table = 'advertisements'
-
-    def __str__(self):
-        return f'Advertisement(id={self.id}, title={self.title}, price={self.price})'
 
     title = models.CharField('Заголовок', max_length=128)
     description = models.TextField('Описание')
@@ -17,3 +12,9 @@ class Advertisement(models.Model):
     # Автоматическое заполнение (auto_now_add и auto_now)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'advertisements'
+
+    def __str__(self):
+        return f'Advertisement(id={self.id}, title={self.title}, price={self.price})'
