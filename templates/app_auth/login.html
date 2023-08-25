@@ -2,8 +2,9 @@
 {% load static %}
 
 {% block title %}
-Регистрация
+Логин
 {% endblock %}
+
 {% block content %}
   <ul class="nav nav-pills sticky-top bg-white nav-fill">
     <li class="nav-item">
@@ -21,12 +22,12 @@
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link active" aria-current="page" href="{% url 'register' %}">
+      <a class="nav-link" href="{% url 'register' %}">
         <span style="font-weight: bold;">Регистрация</span>
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="{% url 'login' %}">
+      <a class="nav-link active" aria-current="page" href="{% url 'login' %}">
         <span style="font-weight: bold;">Войти</span>
       </a>
     </li>
@@ -36,7 +37,7 @@
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="{% url '#' %}">
+      <a class="nav-link" href="{% url 'logout' %}">
         <span style="font-weight: bold;">Выйти</span>
       </a>
     </li>
@@ -49,7 +50,7 @@
     </div>
     <div class="col" style="margin: 50px;">
       <div class="display-2">
-        <span class="badge bg-primary">регистрации</span>
+        <span class="badge bg-primary">авторизации</span>
       </div>
     </div>
     <div class="col" style="margin: 50px;">
@@ -59,28 +60,20 @@
     </div>
   </div>
   <div class="container">
-    <form method="post">
+    {% if error %}
+      <div class="col-sm-4 offset-4 w-25">
+        <div class="form-label bg-warning" style="margin: 10px 0">
+          {{ error }}
+        </div>
+      </div>
+    {% endif %}
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
       <div class="row mb-3">
         <div class="col">
           <label class="col-sm-4 col-form-label offset-4">Username</label>
           <div class="col-sm-4 offset-4 w-25">
-            <input type="text" class="form-control form-control-lg">
-          </div>
-        </div>
-      </div>
-      <div class="row mb-3">
-        <div class="col">
-          <label class="col-sm-4 col-form-label offset-4">Name</label>
-          <div class="col-sm-4 offset-4 w-25">
-            <input type="text" class="form-control form-control-lg">
-          </div>
-        </div>
-      </div>
-      <div class="row mb-3">
-        <div class="col">
-          <label class="col-sm-4 col-form-label offset-4">Surname</label>
-          <div class="col-sm-4 offset-4 w-25">
-            <input type="text" class="form-control form-control-lg">
+            <input name="username" id="username" type="text" class="form-control form-control-lg">
           </div>
         </div>
       </div>
@@ -88,16 +81,7 @@
         <div class="col">
           <label class="col-sm-4 col-form-label offset-4">Password</label>
           <div class="col-sm-4 offset-4 w-25">
-            <input type="password" class="form-control form-control-lg">
-          </div>
-        </div>
-      </div>
-      <div class="row mb-3">
-        <div class="col">
-          <label class="col-sm-4 col-form-label offset-4">Password confirmation</label>
-          <div class="col-sm-4 offset-4 w-25">
-            <input type="password" class="form-control form-control-lg">
-            <div class="form-label bg-warning" style="margin: 10px 0px;">Ошибка (если будет)</div>
+            <input name="password" id="password" type="password" class="form-control form-control-lg">
           </div>
         </div>
       </div>
@@ -107,5 +91,6 @@
         </div>
       </div>
     </form>
+
   </div>
 {% endblock %}

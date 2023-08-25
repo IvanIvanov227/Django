@@ -1,15 +1,23 @@
 from django.db import models
 from django.contrib import admin
+from django import forms
+
 from django.utils.html import format_html
 
 from django.contrib.auth import get_user_model
 
+
 User = get_user_model()
+
+
+def start_with_vop(value):
+    if value.lstrip()[0] == '?':
+        raise forms.ValidationError("Заголовок не может начинаться с ?")
 
 
 class Advertisement(models.Model):
 
-    title = models.CharField('Заголовок', max_length=128)
+    title = models.CharField('Заголовок', max_length=128, validators=[start_with_vop])
     description = models.TextField('Описание')
     # max_digits - max число цифр во всём числе
     # decimal_places - длина дробной части
@@ -20,7 +28,7 @@ class Advertisement(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     # Если user будет удалён, то все связанные объявления тоже будут удалены
     user = models.ForeignKey(User, models.CASCADE)
-    image = models.ImageField('изображение', upload_to='advertisements')
+    image = models.ImageField('Изображение', upload_to='advertisements')
 
     @admin.display(description='Дата создания')
     def created_date(self):
@@ -33,10 +41,10 @@ class Advertisement(models.Model):
     @admin.display(description='Последнее обновление')
     def updated_date(self):
         from django.utils import timezone
-        if self.created_at.date() == timezone.now().date():
-            created_time = self.created_at.time().strftime("%H:%M:%S")
+        if self.updated_at.date() == timezone.now().date():
+            created_time = self.updated_at.time().strftime("%H:%M:%S")
             return format_html('<span style="color: blue; font-weight: bold;">Сегодня в {}</span>', created_time)
-        return self.created_at.strftime("%d.%m.%Y в %H:%M:%S")
+        return self.updated_at.strftime("%d.%m.%Y в %H:%M:%S")
 
     @admin.display(description="Фотография")
     def image_(self):
