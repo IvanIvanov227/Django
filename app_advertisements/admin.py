@@ -7,9 +7,14 @@ from django.utils import timezone
 
 from .models import Advertisement
 
+from django.contrib.admin.actions import delete_selected
+
+delete_selected.short_description = 'Удалить выбранные объявления'
+
 
 class AdvertisementAdmin(admin.ModelAdmin):
-    list_display = ['id', 'user', 'title', 'description', 'price', 'created_date', 'updated_date', 'auction', 'image_']
+    list_display = ['id', 'user', 'title', 'description', 'price', 'created_date', 'updated_date', 'auction',
+                    'get_admin_image']
     list_filter = ['auction', 'created_at']
     actions = ['make_auction_as_false', 'make_auction_as_true']
     fieldsets = (

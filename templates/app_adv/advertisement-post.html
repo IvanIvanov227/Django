@@ -6,63 +6,88 @@
 {% endblock %}
 
 {% block content %}
-  <ul class="nav nav-pills sticky-top bg-white nav-fill">
+<ul class="nav nav-pills sticky-top bg-white nav-fill">
     <li class="nav-item">
-      <a class="nav-link" href="{% url 'index' %}">
-        <span style="font-weight: bold;">Главная</span>
-      </a>
+        <a class="nav-link" href="{% url 'index' %}">
+            <span style="font-weight: bold;">Главная</span>
+        </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="{% url 'top-sellers' %}"><span style="font-weight: bold;">Топ продавцов</span>
-      </a>
+        <a class="nav-link" href="{% url 'top-sellers' %}"><span style="font-weight: bold;">Топ продавцов</span>
+        </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link active" aria-current="page" href="{% url 'advertisement-post' %}">
-        <span style="font-weight: bold;">Разместить объявление</span>
-      </a>
+        <a class="nav-link active" aria-current="page" href="{% url 'advertisement-post' %}">
+            <span style="font-weight: bold;">Разместить объявление</span>
+        </a>
+    </li>
+    {% if not user %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'register' %}">
+            <span style="font-weight: bold;">Регистрация</span>
+        </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="{% url 'register' %}">
-        <span style="font-weight: bold;">Регистрация</span>
-      </a>
+        <a class="nav-link" href="{% url 'login' %}">
+            <span style="font-weight: bold;">Войти</span>
+        </a>
+    </li>
+    {% else %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'profile' %}">
+            <span style="font-weight: bold;">Профиль</span>
+        </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="{% url 'login' %}">
-        <span style="font-weight: bold;">Войти</span>
-      </a>
+        <a class="nav-link" href="{% url 'logout' %}">
+            <span style="font-weight: bold;">Выйти</span>
+        </a>
     </li>
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 'profile' %}">
-        <span style="font-weight: bold;">Профиль</span>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 'logout' %}">
-        <span style="font-weight: bold;">Выйти</span>
-      </a>
-    </li>
-  </ul>
-  <div class="row">
+    {% endif %}
+</ul>
+<div class="row">
     <div class="col" style="margin: 50px;">
-      <div class="display-2">
-        <span class="badge bg-primary">Сообщите миру об этом в этой форме</span>
-      </div>
+        <div class="display-2">
+            <span class="badge bg-primary">Сообщите миру об этом в этой форме</span>
+        </div>
     </div>
-  </div>
-  <div class="container">
+</div>
+<div class="container">
+    {% if error %}
+    <div class="col-sm-4 offset-4 w-25">
+        {% for i in error %}
+        <div class="form-label bg-warning" style="margin: 10px 0">
+            {{ i }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
     <form method="post" enctype="multipart/form-data">
-      {% csrf_token %}
-      <div class="row mb-3">
-        <div class="col">
-          {{ form.as_p }}
+        {% csrf_token %}
+        <div class="row mb-3">
+            <div class="col">
+                <label class="fst-normal fs-5">Заголовок</label>
+                {{ form.title }}
+                <label class="fst-normal fs-5"> Описание</label>
+                {{ form.description }}
+                <label class="fst-normal fs-5"> Цена</label>
+                {{ form.price }}
+                <div class="container">
+                    <label class="fst-normal fs-5"> Торг</label>
+                    {{ form.auction }}
+                    <label class="fst-italic"> Отметьте, если возможен торг</label>
+                </div>
+                <p></p>
+                <label class="fst-normal fs-5"> Изображение</label>
+                {{ form.image }}
+            </div>
         </div>
-      </div>
 
-      <div class="row mb-3 offset-sm-5">
-        <div class="col">
-          <button type="submit" class="btn btn-success">Принять</button>
+        <div class="row mb-3 offset-sm-5">
+            <div class="col">
+                <button type="submit" class="btn btn-success">Принять</button>
+            </div>
         </div>
-      </div>
     </form>
-  </div>
+</div>
 {% endblock %}

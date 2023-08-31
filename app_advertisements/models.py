@@ -1,22 +1,20 @@
 from django.db import models
 from django.contrib import admin
 from django import forms
-
+from django.core.exceptions import ValidationError
 from django.utils.html import format_html
 
 from django.contrib.auth import get_user_model
-
 
 User = get_user_model()
 
 
 def start_with_vop(value):
     if value.lstrip()[0] == '?':
-        raise forms.ValidationError("Заголовок не может начинаться с ?")
+        raise ValidationError("Заголовок не может начинаться с '?'")
 
 
 class Advertisement(models.Model):
-
     title = models.CharField('Заголовок', max_length=128, validators=[start_with_vop])
     description = models.TextField('Описание')
     # max_digits - max число цифр во всём числе
@@ -47,11 +45,13 @@ class Advertisement(models.Model):
         return self.updated_at.strftime("%d.%m.%Y в %H:%M:%S")
 
     @admin.display(description="Фотография")
-    def image_(self):
+    def get_admin_image(self):
         if self.image:
-            return format_html(f'<img src="{self.image.url}" width="100" height="100" class="img-fluid rounded-start" alt="Фото объявления">')
+            return format_html(
+                f'<img src="{self.image.url}" width="100" height="100" class="img-fluid rounded-start" alt="Фото объявления">')
         else:
-            return format_html(f'<img src="/static/img/adv.png" width="100" height="100" class="img-fluid rounded-start" alt="Фото объявления">')
+            return format_html(
+                f'<img src="/static/img/adv.png" width="100" height="100" class="img-fluid rounded-start" alt="Фото объявления">')
 
     def __str__(self):
         return f'Advertisement(id={self.id}, title={self.title}, price={self.price})'
